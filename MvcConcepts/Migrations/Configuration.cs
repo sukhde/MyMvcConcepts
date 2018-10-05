@@ -28,7 +28,9 @@ namespace MvcConcepts.Migrations
             //If not, create them.
             if (!context.Roles.Any(r => r.Name == "Admin"))
             {
-                roleManager.Create(new IdentityRole { Name = "Admin" });
+                var role = new IdentityRole("Admin");
+
+                roleManager.Create(role);
             }
 
             if (!context.Roles.Any(r => r.Name == "Project Manager"))

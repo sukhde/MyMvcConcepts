@@ -1,0 +1,40 @@
+﻿@model MvcConcepts.Models.UserRoleViewModel
+@{
+    ViewBag.Title = "ChangeRole";
+}
+
+<div id="wrapper">
+    <!-- Navigation -->
+    <!-- Page Content -->
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <section class="content">
+                                <p>
+                                    User: @Model.Name
+                                </p>
+                                @using (Html.BeginForm())
+                                {
+                                    @Html.HiddenFor(p => p.Id)
+                                    @Html.ListBoxFor(p => p.SelectedRoles, Model.Roles)
+                                    <input type="submit" value="Submit!" />
+                                }
+                            </section>
+
+
+                            <div>
+                                @Html.ActionLink("Back to List", "Index")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

@@ -37,6 +37,10 @@ namespace MvcConcepts.Migrations
             {
                 roleManager.Create(new IdentityRole { Name = "Project Manager" });
             }
+            if (!context.Roles.Any(r => r.Name == "Developer"))
+            {
+                roleManager.Create(new IdentityRole { Name = "Developer" });
+            }
 
             if (!context.Roles.Any(r => r.Name == "Submitter"))
             {

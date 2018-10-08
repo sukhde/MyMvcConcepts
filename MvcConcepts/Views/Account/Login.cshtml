@@ -52,17 +52,17 @@
                                     <p>
                                         @Html.ActionLink("Register as a new user", "Register")
                                     </p>
-                                        <p>
-                                            @Html.ActionLink("Forgot your password?", "ForgotPassword")
-                                        </p>
+                                    <p>
+                                        @Html.ActionLink("Forgot your password?", "ForgotPassword")
+                                    </p>
                                 }
                             </section>
                         </div>
                         <div class="col-md-4">
-                                <section id="socialLoginForm">
-                                    @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
-                                </section>
-                            </div>
+                            <section id="socialLoginForm">
+                                @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+                            </section>
+                        </div>
                     </div>
                 </div>
                 <!-- /.col-lg-12 -->
@@ -73,11 +73,6 @@
     </div>
     <!-- /#page-wrapper -->
 </div>
-
-
-
-
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

@@ -3,8 +3,6 @@
 @{
     ViewBag.Title = "Index";
 }
-
-
 <div id="wrapper">
     <!-- Navigation -->
     <!-- Page Content -->
@@ -14,9 +12,9 @@
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-md-8">
-                            <p>
-                                @Html.ActionLink("Create New", "Create")
-                            </p>
+                            @*<p>
+                                    @Html.ActionLink("Create New", "Create")
+                                </p>*@
                             <table class="table">
                                 <tr>
                                     <th>
@@ -43,7 +41,6 @@
                                     </tr>
                                 }
                             </table>
-
                             <div>
                                 @Html.ActionLink("Back to List", "Index")
                             </div>

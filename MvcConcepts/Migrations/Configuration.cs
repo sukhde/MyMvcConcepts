@@ -21,6 +21,24 @@ namespace MvcConcepts.Migrations
             //  This method will be called after migrating to the latest version.
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data.var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+            context.TicketTypes.AddOrUpdate(p => p.Id,
+           new TicketType() { Title = "Software Update" },
+           new TicketType() { Title = "Database Eror" },
+           new TicketType() { Title = "Bug fixes" },
+           new TicketType() { Title = "Adding Helpers" }
+          );
+            context.TicketPriorities.AddOrUpdate(p => p.Id,
+            new TicketPriority() { Title = "Low" },
+            new TicketPriority() { Title = "Medium" },
+            new TicketPriority() { Title = "High" },
+            new TicketPriority() { Title = "Urgent" });
+
+            context.TicketStatus.AddOrUpdate(p => p.Id,
+            new TicketStatus() { Title = "1" },
+            new TicketStatus() { Title = "2" },
+            new TicketStatus() { Title = "3" },
+            new TicketStatus() { Title = "4" });
+
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 
@@ -48,7 +66,7 @@ namespace MvcConcepts.Migrations
             }
 
             ApplicationUser adminUser = null;
-           
+
             //Check if user exists on the database.
             //If not, create it. 
             if (!context.Users.Any(p => p.UserName == "admin@myblogapp.com"))
@@ -76,7 +94,7 @@ namespace MvcConcepts.Migrations
             {
                 userManager.AddToRole(adminUser.Id, "Admin");
             }
-           
+            
         }
     }
 }

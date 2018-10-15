@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -14,10 +15,16 @@ namespace MvcConcepts.Models
 
             public ApplicationUser()
             {
-                Projects = new HashSet<Project>();
-            }
+            Projects = new HashSet<Project>();
+            CreatedTickets = new HashSet<Tickets>();
+            AssignedTickets = new HashSet<Tickets>();
+        }
 
             public virtual ICollection<Project> Projects { get; set; }
+        [InverseProperty("Creator")]
+        public virtual ICollection<Tickets> CreatedTickets { get; set; }
+        [InverseProperty("Assignee")]
+        public virtual ICollection<Tickets> AssignedTickets { get; set; }
         public string FirstName { get; internal set; }
         public string LastName { get; internal set; }
         public string DisplayName { get; internal set; }
@@ -45,6 +52,12 @@ namespace MvcConcepts.Models
 
             public System.Data.Entity.DbSet<MvcConcepts.Models.Project> Projects { get; set; }
 
+        public System.Data.Entity.DbSet<MvcConcepts.Models.Tickets> Tickets { get; set; }
 
-        }
+        public System.Data.Entity.DbSet<MvcConcepts.Models.TicketPriority> TicketPriorities { get; set; }
+
+        public System.Data.Entity.DbSet<MvcConcepts.Models.TicketStatus> TicketStatus { get; set; }
+
+        public System.Data.Entity.DbSet<MvcConcepts.Models.TicketType> TicketTypes { get; set; }
+    }
     }

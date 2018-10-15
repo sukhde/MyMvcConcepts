@@ -1,0 +1,116 @@
+﻿@model IEnumerable<MvcConcepts.Models.Tickets>
+
+@{
+    ViewBag.Title = "Index";
+}
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row">
+                    <div class="col-md-8">
+
+                        <h2>Index</h2>
+
+                        <p>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                            @Html.ActionLink("Create New", "Create")
+                            }
+                        </p>
+                        <table class="table" id="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Assignee)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Creator)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.TicketPriority)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.TicketStatus)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.TicketType)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Title)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Description)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Created)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Updated)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.ProjectId)
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Assignee.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Creator.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TicketPriority.Title)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TicketStatus.Title)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TicketType.Title)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Title)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Description)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Created)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Updated)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ProjectId)
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                                            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                                        </td>
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#table').DataTable();
+        });
+    </script>
+}

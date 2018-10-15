@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MvcConcepts.Models;
@@ -57,6 +58,11 @@ namespace MvcConcepts.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -139,6 +145,7 @@ namespace MvcConcepts.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            
             return View();
         }
 
@@ -153,8 +160,12 @@ namespace MvcConcepts.Controllers
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name, EmailConfirmed = true };
                 var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                if (!UserManager.IsInRole(user.Id, "Submitter"))
                 {
+                    UserManager.AddToRole(user.Id, "Submitter");
+                }
+                if (result.Succeeded)
+                { 
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771

@@ -16,7 +16,7 @@
                             <hr />
                             <dl class="dl-horizontal">
                                 <dt>
-                                    @Html.DisplayNameFor(model => model.Assignee.Name)
+                                    @Html.DisplayNameFor(model => model.Assignee)
                                 </dt>
 
                                 <dd>
@@ -24,7 +24,7 @@
                                 </dd>
 
                                 <dt>
-                                    @Html.DisplayNameFor(model => model.Creator.Name)
+                                    @Html.DisplayNameFor(model => model.Creator)
                                 </dt>
 
                                 <dd>
@@ -32,7 +32,7 @@
                                 </dd>
 
                                 <dt>
-                                    @Html.DisplayNameFor(model => model.TicketPriority.Title)
+                                    @Html.DisplayNameFor(model => model.TicketPriority)
                                 </dt>
 
                                 <dd>
@@ -40,7 +40,7 @@
                                 </dd>
 
                                 <dt>
-                                    @Html.DisplayNameFor(model => model.TicketStatus.Title)
+                                    @Html.DisplayNameFor(model => model.TicketStatus)
                                 </dt>
 
                                 <dd>
@@ -48,7 +48,7 @@
                                 </dd>
 
                                 <dt>
-                                    @Html.DisplayNameFor(model => model.TicketType.Title)
+                                    @Html.DisplayNameFor(model => model.TicketType)
                                 </dt>
 
                                 <dd>
@@ -96,6 +96,109 @@
                                 </dd>
 
                             </dl>
+                            <p>
+                                @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+                                @Html.ActionLink("Back to List", "Index")
+                            </p>
+                            <div>
+
+                                @using (Html.BeginForm("CreateComment", "Tickets", new { id = Model.Id }, FormMethod.Post))
+                                {
+                                    <input type="hidden" name="comment" />
+                                    <div class="col-lg-12">
+                                        <label>Write Comment:</label>
+                                    </div>
+                                    <textarea name="body" id="comment"></textarea>
+                                    <div>
+                                        <input type="submit" value="Submit Comment">
+                                  </div>
+                                }
+                                @foreach (var item in Model.Comments)
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <p>
+                                        By- @item.User.DisplayName |
+                                        Comment-  @item.Comment    |
+                                        Date- @item.Created
+                                    </p>
+                                }
+                                @using (Html.BeginForm("Attachment", "Tickets", new { id = Model.Id }, FormMethod.Post, new { enctype = "Multipart/form-data"}))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="Attachment" />
+                                    <div class=" col-lg-12">
+                                        <label>Add attachment:</label>
+                                    </div>
+                                    <Input type="file" id="Attachment" name="image" />
+                                    <div class="col-lg-12">
+                                        <label>Description:</label>
+                                    </div>
+                                    <textarea name="Description" id="attachment"></textarea>
+                                     <div>
+                                        <input type="submit" value="submit">
+                                    </div>
+                                }
+                                <div>
+                                    @foreach (var item in Model.Attachments)
+                                    {
+                                    <p>
+                                        Attachment - @item.FileUrl |
+                                        Date- @item.Created
+                                    </p>
+                                    }
+                                </div>
+
+                                @using (Html.BeginForm("Edit", "Tickets", new { id = Model.Id }, FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden" name="Edit" />
+                                    <label>History:</label>
+                                }
+                                <table class="table" id="table">
+                                    <tbody>
+                                        <tr>
+                                            <th>
+                                                Oldvalue
+                                            </th>
+                                            <th>
+                                                New Value
+                                            </th>
+                                            <th>
+                                                Property
+                                            </th>
+                                            <th>
+                                                Id
+                                            </th>
+                                            <th>
+                                                Changed
+                                            </th>
+                                        </tr>
+                                        @foreach (var item in Model.Histories)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.OldValue)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.NewValue)
+                                                </td>
+
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Property)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Id)
+                                                </td>
+
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Changed)
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -103,7 +206,9 @@
         </div>
     </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+
+
+
+
+
+

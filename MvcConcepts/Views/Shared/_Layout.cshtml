@@ -9,13 +9,9 @@
     <title>SB Admin 2 - Bootstrap Admin Theme</title>
 
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
-    <!-- MetisMenu CSS -->
     <link href="~/Content/metisMenu.min.css" rel="stylesheet" />
-    <!-- Custom CSS -->
     <link href="~/Content/sb-admin-2.css" rel="stylesheet" />
-    <!-- Morris Charts CSS -->
     <link href="~/Content/morris.css" rel="stylesheet" />
-    <!-- Custom Fonts -->
     <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -24,11 +20,9 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     <link href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css" rel="stylesheet" />
-
 </head>
 <body>
     <div id="wrapper">
-        <!-- Navigation -->
         <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -39,11 +33,11 @@
                 </button>
                 <a class="navbar-brand" href="index.html">MyApplication</a>
             </div>
-            <!-- /.navbar-header -->
+
             <ul class="nav navbar-top-links navbar-right">
                 @Html.Partial("_LoginPartial")
             </ul>
-            <!-- /.navbar-top-links -->
+
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
@@ -56,82 +50,62 @@
                                     </button>
                                 </span>
                             </div>
-                            <!-- /input-group -->
                         </li>
-                        @*<li>
-                                <a href="@Url.Action("Index", "Home")"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
-                            </li>*@
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li>
+                                <a href="@Url.Action("create", "projects")"><i class="fa fa-keyboard-o"></i>Projects</a>
+                            </li>
+                            <li>
+                                <a href="/ApplicationUsers">Change Role<i class="material-icons"></i></a>
+                            </li>
+                        }
+
+
                         <li>
-                            <a href="@Url.Action("create", "projects")"><i class="fa fa-keyboard-o"></i>Projects</a>
+                            <a href="#"><i class="fa fa-files-o fa-fw"></i> Profiles<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="#">Admin</a>
+                                </li>
+                                <li>
+                                    <a href="#">Developer</a>
+                                </li>
+                                <li>
+                                    <a href="#">project manager</a>
+                                </li>
+                                <li>
+                                    <a href="#">Submitter</a>
+                                </li>
+                            </ul>
                         </li>
                         <li>
-                            <a href="/ApplicationUsers">Change Role<i class="material-icons"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-sitemap fa-fw"></i> Tickets<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-sitemap fa-fw"></i> Tickets/Projects<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
                                     <a href="/Tickets">List of Tickets</a>
                                 </li>
-                                <li>
-                                    <a href="/Tickets/Create">Create Tickets</a>
-                                </li>
-                                @*<li>
-                                    <a href="#">Third Level <span class="fa arrow"></span></a>
-                                    <ul class="nav nav-third-level">
-                                        <li>
-                                            <a href="#">Third Level Item</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Third Level Item</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Third Level Item</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">Third Level Item</a>
-                                        </li>
-                                    </ul>
-                                    <!-- /.nav-third-level -->
-                                </li>
+                                @if (User.IsInRole("Submitter"))
+                                {
+                                    <li>
+                                        <a href="/Tickets/Create">Create Tickets</a>
+                                    </li>
+                                }
                             </ul>
-                            <!-- /.nav-second-level -->
                         </li>
-                        <li>
-                            <a href="#"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="blank.html">Blank Page</a>
-                                </li>
-                                <li>
-                                    <a href="login.html">Login Page</a>
-                                </li>
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        </li>*@
                     </ul>
                 </div>
-                <!-- /.sidebar-collapse -->
             </div>
-            <!-- /.navbar-static-side -->
         </nav>
     </div>
     @RenderBody()
-    <!-- jQuery -->
+
     <script src="~/Scripts/jquery.min.js"></script>
-    <!-- Bootstrap Core JavaScript -->
     <script src="~/Scripts/bootstrap.min.js"></script>
-    <!-- Metis Menu Plugin JavaScript -->
     <script src="~/Scripts/metisMenu.min.js"></script>
-    <!-- Morris Charts JavaScript -->
     <script src="~/Scripts/raphael.min.js"></script>
-    @*<script src="~/Scripts/morris.min.js"></script>
-        <script src="~/Scripts/morris-data.js"></script>*@
-    <!-- Custom Theme JavaScript -->
     <script src="~/Scripts/sb-admin-2.js"></script>
     <script type="text/javascript" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-
-
     @RenderSection("scripts", required: false)
 </body>
 </html>

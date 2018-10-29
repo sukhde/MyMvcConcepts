@@ -22,7 +22,7 @@ namespace MvcConcepts.Controllers
         public AccountController()
         {
         }
-
+  
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
@@ -145,7 +145,7 @@ namespace MvcConcepts.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            
+
             return View();
         }
 
@@ -155,17 +155,19 @@ namespace MvcConcepts.Controllers
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
+
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name, EmailConfirmed = true };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name };
                 var result = await UserManager.CreateAsync(user, model.Password);
-                if (!UserManager.IsInRole(user.Id, "Submitter"))
-                {
-                    UserManager.AddToRole(user.Id, "Submitter");
-                }
                 if (result.Succeeded)
-                { 
+                {
+                    var context = new ApplicationDbContext();
+                    var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
+                    var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+
+                    userManager.AddToRole(user.Id, "Submitter");
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
@@ -183,7 +185,10 @@ namespace MvcConcepts.Controllers
             return View(model);
         }
 
-        //
+
+
+
+
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)

@@ -22,23 +22,23 @@ namespace MvcConcepts.Migrations
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data.var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             context.TicketTypes.AddOrUpdate(p => p.Id,
-           new TicketType() {Id=1, Title = "Software Update" },
+           new TicketType() { Id = 1, Title = "Software Update" },
            new TicketType() { Id = 2, Title = "Database Eror" },
            new TicketType() { Id = 3, Title = "Bug fixes" },
            new TicketType() { Id = 4, Title = "Adding Helpers" });
             context.TicketPriorities.AddOrUpdate(p => p.Id,
-            new TicketPriority() { Id = 1,Title = "Low" },
+            new TicketPriority() { Id = 1, Title = "Low" },
             new TicketPriority() { Id = 2, Title = "Medium" },
             new TicketPriority() { Id = 3, Title = "High" },
-            new TicketPriority() { Id = 4,Title = "Urgent" });
+            new TicketPriority() { Id = 4, Title = "Urgent" });
 
             context.TicketStatus.AddOrUpdate(p => p.Id,
-            new TicketStatus() { Id = 1,Title = "started" },
-            new TicketStatus() { Id = 2,Title = "finished" },
-            new TicketStatus() { Id = 3 ,Title = "completed" },
-            new TicketStatus(){ Id = 4, Title = "incomplete" });
+            new TicketStatus() { Id = 1, Title = "started" },
+            new TicketStatus() { Id = 2, Title = "finished" },
+            new TicketStatus() { Id = 3, Title = "completed" },
+            new TicketStatus() { Id = 4, Title = "incomplete" });
 
-           
+
 
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));

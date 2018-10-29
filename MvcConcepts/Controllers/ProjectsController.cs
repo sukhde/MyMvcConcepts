@@ -12,18 +12,20 @@ using MvcConcepts.Models;
 
 namespace MvcConcepts.Controllers
 {
-    [Authorize(Roles = "Admin,Project Manager")]
+   
     public class ProjectsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Projects
+        
         public ActionResult Index()
         {
             return View(db.Projects.ToList());
         }
 
         // GET: Projects/Details/5
+        [Authorize(Roles = "Admin,Project Manager")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -39,6 +41,7 @@ namespace MvcConcepts.Controllers
         }
 
         // GET: Projects/Create
+        [Authorize(Roles = "Admin,Project Manager")]
         public ActionResult Create()
         {
             return View();
@@ -47,7 +50,9 @@ namespace MvcConcepts.Controllers
         // POST: Projects/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin,Project Manager")]
         [HttpPost]
+       
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name")] Project project)
         {
@@ -62,6 +67,7 @@ namespace MvcConcepts.Controllers
         }
 
         // GET: Projects/Edit/5
+        [Authorize(Roles = "Admin,Project Manager")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -80,6 +86,7 @@ namespace MvcConcepts.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Admin,Project Manager")]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name")] Project project)
         {
@@ -118,6 +125,7 @@ namespace MvcConcepts.Controllers
             return RedirectToAction("Index");
         }
         //get:Projects/AssignUsers/
+        [Authorize(Roles = "Admin,Project Manager")]
         public ActionResult AssignUsers(int id)
         {
             var model = new ProjectAssignViewModel();

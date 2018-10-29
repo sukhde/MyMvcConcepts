@@ -5,14 +5,17 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using MvcConcepts.Helper;
 using MvcConcepts.Models;
 
 namespace MvcConcepts.Controllers
-{[Authorize]
+{
+    [Authorize]
     public class TicketsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -41,6 +44,7 @@ namespace MvcConcepts.Controllers
         }
 
         // GET: Tickets/Create
+        [Authorize(Roles = "Submitter")]
         public ActionResult Create()
         {
             ViewBag.AssigneeId = new SelectList(db.Users, "Id", "Name");
@@ -55,7 +59,7 @@ namespace MvcConcepts.Controllers
         // POST: Tickets/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize]
+        [Authorize(Roles = "Submitter")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Title,Description,AssignId,TicketTypeId,ProjectId,TicketPriorityId,TicketStatusId")] Tickets tickets)
@@ -141,7 +145,7 @@ namespace MvcConcepts.Controllers
                 dbTicket.Updated = dateChanged;
                 var originalValues = db.Entry(dbTicket).OriginalValues;
                 var currentValues = db.Entry(dbTicket).CurrentValues;
-                
+
                 foreach (var property in originalValues.PropertyNames)
                 {
                     if (property != "Updated")
@@ -179,13 +183,13 @@ namespace MvcConcepts.Controllers
             {
                 return db.TicketTypes.Find(Convert.ToInt32(key)).Title;
             }
-           
+
             if (propertyName == "TicketPriorityId")
             {
                 return db.TicketPriorities.Find(Convert.ToInt32(key)).Title;
             }
-           
-             if (propertyName == "TicketStatusId")
+
+            if (propertyName == "TicketStatusId")
             {
                 return db.TicketStatus.Find(Convert.ToInt32(key)).Title;
             }
@@ -228,7 +232,7 @@ namespace MvcConcepts.Controllers
         // GET: TicketAttachments/Create
         public ActionResult Attachment()
         {
-           
+
             return View();
         }
 
@@ -237,7 +241,7 @@ namespace MvcConcepts.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Attachment([Bind(Include = "TicketId,Description,Created,UserId,FileUrl")]int id ,TicketAttachments ticketAttachments , HttpPostedFileBase image)
+        public ActionResult Attachment([Bind(Include = "TicketId,Description,Created,UserId,FileUrl")]int id, TicketAttachments ticketAttachments, HttpPostedFileBase image)
         {
             if (ModelState.IsValid)
             {
@@ -252,15 +256,78 @@ namespace MvcConcepts.Controllers
                 ticketAttachments.TicketId = id;
                 db.TicketAttachments.Add(ticketAttachments);
                 db.SaveChanges();
-                return RedirectToAction("Index","Tickets");
+
+                var Tickets = db.Tickets.Where(x => x.Id == ticketAttachments.TicketId).FirstOrDefault();
+                if (Tickets.AssigneeId != null)
+                {
+                    var personalEmailService = new PersonalEmailService();
+                    var mailMessage = new MailMessage(WebConfigurationManager.AppSettings["emailto"], Tickets.Assignee.Email);
+                    mailMessage.Body = "added attachment";
+                    mailMessage.IsBodyHtml = true;
+                    personalEmailService.Send(mailMessage);
+                }
+
+
+                return RedirectToAction("Index", "Tickets");
             }
+
 
             ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title", ticketAttachments.TicketId);
             ViewBag.UserId = new SelectList(db.Users, "Id", "Name", ticketAttachments.UserId);
             return View(ticketAttachments);
 
-      }
-        
+        }
+        //Get //submitter tickets
+        [Authorize(Roles = "Submitter")]
+        public ActionResult SubmitterTickets()
+        {
+            var UserId = User.Identity.GetUserId();
+            var tickets = db.Tickets
+                .Where(t => t.CreatorId == UserId).Include(t => t.Assignee).Include(t => t.Creator).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
+            return View("Index", tickets.ToList());
+        }
+
+
+        //Get //Developer tickets
+        [Authorize(Roles = "Developer")]
+        public ActionResult DeveloperTickets()
+        {
+            var UserId = User.Identity.GetUserId();
+            var tickets = db.Tickets
+                .Where(t => t.AssigneeId == UserId).Include(t => t.Assignee).Include(t => t.Creator).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
+            return View("Index", tickets.ToList());
+        }
+
+
+        //Assignticket 
+        public ActionResult AssignTickets(int id)
+        {
+            var model = new TicketAssignViewModels();
+
+            var ticket = db.Tickets.FirstOrDefault(p => p.Id == id);
+            var users = db.Users.ToList();
+            var RoleAssigned = ticket.AssigneeId;
+            model.Id = id;
+            model.UserList = new SelectList(users, "Id", "Name", RoleAssigned);
+            return View(model);
+        }
+        [HttpPost]
+        public ActionResult AssignTickets(TicketAssignViewModels model)
+        {
+            var ticket = db.Tickets.FirstOrDefault(p => p.Id == model.Id);
+            if (model.SelectedUsers != null)
+            {
+                foreach (var userId in model.SelectedUsers)
+                {
+                    var user = db.Users.FirstOrDefault(p => p.Id == userId);
+                    ticket.AssigneeId = userId;
+                }
+            }
+            db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

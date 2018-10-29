@@ -14,7 +14,7 @@ using MvcConcepts.Helper;
 
 namespace MvcConcepts.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class ApplicationUsersController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -38,6 +38,7 @@ namespace MvcConcepts.Controllers
 
             return View(model);
         }
+
         [HttpPost]
         public ActionResult ChangeRole(UserRoleViewModel model)
         {
@@ -56,13 +57,9 @@ namespace MvcConcepts.Controllers
             {
                 userManager.AddToRole(user.Id, role);
             }
-
-            //STEP 5: Refresh authentication cookies so the roles are updated instantly
-            var signInManager = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            signInManager.SignIn(user, isPersistent: false, rememberBrowser: false);
-
             return RedirectToAction("Index");
         }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
